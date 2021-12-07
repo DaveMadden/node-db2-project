@@ -23,18 +23,19 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', checkCarId, async (req, res, next) => {
     try {
-      const data = await Cars.getById(req.params.id)
-      res.json(data)
-    } catch (err) {
+      res.json(req.car) //this gets populated by middleware, so no need to call db twice
+    }
+    catch (err) {
       next(err);
     }
   })
 
-router.post('/', async (req, res, next) => {
+router.post('/', checkCarPayload, checkVinNumberValid, checkVinNumberUnique, async (req, res, next) => {
     try {
       const data = await Cars.create(req.body)
       res.json(data)
-    } catch (err) {
+    }
+    catch (err) {
       next(err);
     }
   })
